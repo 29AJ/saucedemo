@@ -6,7 +6,7 @@ from pages.home_page import HomePage
 class LoginTest(unittest.TestCase):
     def setUp(self):
         self.driver = webdriver.Chrome()
-            self.driver.get("https://www.saucedemo.com/")
+        self.driver.get("https://www.saucedemo.com/")
         self.driver.maximize_window()
 
     def tearDown(self):
