@@ -4,7 +4,7 @@ from pages.login_page import LoginPage
 from pages.home_page import HomePage
 
 class LoginTest(unittest.TestCase):
-    def setUp(self):
+    def test_login(self):
         self.driver = webdriver.Chrome()
         self.driver.get("https://www.saucedemo.com/")
         self.driver.maximize_window()
