@@ -4,13 +4,12 @@ from pages.login_page import LoginPage
 from pages.home_page import HomePage
 
 class LoginTest(unittest.TestCase):
-    def test_login(self):
-        self.driver = webdriver.Chrome()
-        self.driver.get("https://www.saucedemo.com/")
-        self.driver.maximize_window()
+        def test_login(self):
+            self.driver = webdriver.Chrome()
+            self.driver.get("https://www.saucedemo.com/")
+            self.driver.maximize_window()
 
-    def tearDown(self):
-        self.driver.quit()
+
 
     def test_login_success(self):
         login_page = LoginPage(self.driver)
@@ -22,6 +21,9 @@ class LoginTest(unittest.TestCase):
         product_label_text = home_page.get_product_label_text()
 
         self.assertEqual(product_label_text, "Products", "Login failed")
+
+        def tearDown(self):
+            self.driver.quit()
 
 if __name__ == "__main__":
     unittest.main()
