@@ -1,29 +1,50 @@
-import unittest
+import pytest
 from selenium import webdriver
-from pages.login_page import LoginPage
-from pages.home_page import HomePage
-
-class LoginTest(unittest.TestCase):
-        def test_login(self):
-            self.driver = webdriver.Chrome()
-            self.driver.get("https://www.saucedemo.com/")
-            self.driver.maximize_window()
+from selenium.webdriver.common.by import By
+from pages.LoginPage import LoginPage
 
 
+@pytest.fixture
+def driver():
+    # Setup: Create a WebDriver instance
+    driver = webdriver.Chrome("C:\\Users\\Mavliutova Anzhela\\PycharmProjects\\pythonProject\\test_saucedemo\\chromedriver_win32\\chromedriver.exe")
+    yield driver
+    # Teardown: Quit the WebDriver instance
+    driver.quit()
 
-    def test_login_success(self):
-        login_page = LoginPage(self.driver)
-        login_page.enter_username("standard_user")
-        login_page.enter_password("secret_sauce")
-        login_page.click_login_button()
 
-        home_page = HomePage(self.driver)
-        product_label_text = home_page.get_product_label_text()
+def test_login_valid_credentials(driver):
+    # Instantiate the LoginPage
+    login_page = LoginPage(driver)
 
-        self.assertEqual(product_label_text, "Products", "Login failed")
+    # Navigate to the login page
+    driver.get("https://www.saucedemo.com/")
 
-        def tearDown(self):
-            self.driver.quit()
+    # Enter valid credentials
+    login_page.login("standard_user", "secret_sauce")
 
-if __name__ == "__main__":
-    unittest.main()
+    # Verify successful login by checking the presence of a specific element on the next page
+    assert driver.find_element(By.CLASS_NAME, "inventory_list").is_displayed()
+
+
+def test_login_invalid_credentials(driver):
+    # Instantiate the LoginPage
+    login_page = LoginPage(driver)
+
+    # Navigate to the login page
+    driver.get("https://www.saucedemo.com/")
+
+    # Enter invalid credentials
+    login_page.login("invalid_user", "invalid_password")
+
+    try:
+        # Locate the error message element using CSS selector
+        error_element = driver.find_element(By.CSS_SELECTOR, "[data-test='error']")
+
+        # Verify error message is displayed
+        assert error_element.text == "Epic sadface: Username and password do not match any user in this service"
+    except NoSuchElementException:
+        # Handle the case when the error element is not found
+        assert False, "Error message element not found"
+
+

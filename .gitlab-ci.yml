@@ -1,7 +1,0 @@
-run_tests:
-  stage: test
-  script:
-    - py.test
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "schedule"'
-      cron: "0 9,18 * * *"
